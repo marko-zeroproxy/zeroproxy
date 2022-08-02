@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient883">
+      <stop
+         style="stop-color:#ff6600;stop-opacity:1;"
+         offset="0"
+         id="stop879" />
+      <stop
+         style="stop-color:#ff6600;stop-opacity:0.32163742"
+         offset="1"
+         id="stop881" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient851-0">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop847" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop849" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient851-0"
+       id="linearGradient853"
+       x1="31.464155"
+       y1="56.480749"
+       x2="38.023201"
+       y2="56.480749"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       xlink:href="#linearGradient851-0"
+       id="linearGradient877"
+       gradientUnits="userSpaceOnUse"
+       x1="31.464155"
+       y1="56.480749"
+       x2="38.023201"
+       y2="56.480749"
+       gradientTransform="translate(13.758336)" />
+    <linearGradient
+       xlink:href="#linearGradient883"
+       id="linearGradient885"
+       x1="32.457965"
+       y1="55.779926"
+       x2="89.733025"
+       y2="55.958099"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:10.58329999999999949px;line-height:1.25;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue Bold';stroke-width:0.264583;fill:url(#linearGradient885);fill-opacity:1"
+       x="31.75"
+       y="59.720242"
+       id="text835"><tspan
+         id="tspan833"
+         x="31.75"
+         y="59.720242"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sk;-inkscape-font-specification:Sk;fill:url(#linearGradient885);stroke-width:0.264583;fill-opacity:1">0x0market</tspan></text>
+    <path
+       style="fill:#ff6600;stroke:url(#linearGradient853);stroke-width:0.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 32.427432,60.756894 5.16701,-9.799499"
+       id="path837" />
+    <path
+       style="fill:#ff6600;stroke:url(#linearGradient877);stroke-width:0.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 46.185774,60.756894 4.454319,-9.799499"
+       id="path875" />
+  </g>
+</svg>

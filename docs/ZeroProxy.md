@@ -96,3 +96,32 @@ technology.  This solution is built from the following elements:
   RESTful interface to access ZeroProxy asset management and trading
   functionality, incuding support for hosted wallets.
   
+## How does it work?
+Go through some examples here
+  
+## Architecture
+Break down the ZeroProxy project by architectural element
+
+### ZeroChain
+Say more about the ZeroChain here
+
+### BridgeMining
+Say more about BridgeMining here
+
+### 0x0proxy Contract Framework
+![0x0proxy architecture](./assets/0x0proxyArch.svg#gh-light-mode-only)
+![0x0proxy architecture](./assets/0x0proxyArchDark.svg#gh-dark-mode-only)
+
+Say more about the 0x0proxy contract framework here
+
+### ZeroProxy APIs
+Say more about APIs, including:
+
+#### ZeroProxy Web3 API
+Talk about the web3 API
+
+#### ZeroProxy Web2 API
+Talk about the web2 API
+
+## Conclusions
+Wrap things up
