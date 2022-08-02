@@ -109,8 +109,8 @@ Say more about the ZeroChain here
 Say more about BridgeMining here
 
 ### 0x0proxy Contract Framework
-![0x0proxy architecture](./assets/0x0proxyArch.svg#gh-light-mode-only)
-![0x0proxy architecture](./assets/0x0proxyArchDark.svg#gh-dark-mode-only)
+![0x0proxy architecture](../assets/0x0proxyArch.svg#gh-light-mode-only)
+![0x0proxy architecture](../assets/0x0proxyArchDark.svg#gh-dark-mode-only)
 
 Say more about the 0x0proxy contract framework here
 
