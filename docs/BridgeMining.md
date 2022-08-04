@@ -1,6 +1,6 @@
 # Bridge Mining for Blockchain Interconnect
-A whitepaper by [0x0proxy.et](http://0x0proxy.et)h. Created 29 July 2022
-DRAFT Version BRDG-ENG-030922//
+A whitepaper by 0x0proxy.eth. Created 29 July 2022  
+DRAFT Version BRDG-ENG-030922
 
 ## Problem to Solve
 
