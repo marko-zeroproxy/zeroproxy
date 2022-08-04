@@ -109,7 +109,26 @@ Break down the ZeroProxy project by architectural element
 Say more about the ZeroChain here
 
 ### BridgeMining
-Say more about BridgeMining here
+Bridges between blockchains are essential to the operation of many
+important and useful blockchain protocols. However, the problem of
+securely bridging between blockchains remains an open problem, as
+evidenced by the large number and high value of recent bridge attack
+exploits. Since mature blockchain L1s are rarely the subject of
+successful chain-level attacks, why do bridges remain vulnerable?
+
+This is because while blockchain protocols provide relatively strong
+security and consistency guarantees, connections between blockchains
+necessarily exist outside such guarantees, and present low-redundancy
+failure modes, in some cases requiring only the compromise of a single
+signer.
+
+We have developoed a new, highly secure approach to bridging assets
+between blockchains in which the challenge of attacking the bridge
+scales in difficulty with the challenge of attacking the integrity of
+the underlying L1 chain.
+
+For more information, see the [ZeroProxy Bridge Mining
+Whitepaper](./BridgeMining.md).
 
 ### 0x0proxy Contract Framework
 
