@@ -182,53 +182,122 @@ We propose a solution to the bridging problem that has the security
 properties of an L1, namely that a successful exploit would require
 the compromise of multiple, independent, and heterogeneous nodes, and
 in which the security of the bridging system grows proportionally with
-the number of nodes that are added.
+the number of nodes that are added. Our proposed solution also
+impooses a topological structure on the bridging system that minimizes
+complexity and risk.
 
-### A blockchain for bridging... and maybe for other things, too 😉
+### Bridging Topology: Hub-and-spoke vs n^2
+Right now, bridges (such as those provided by Layer Zero) are
+generally an ad-hoc affair. If a bridge is necessary between chain
+**A** and chain **B**, that specific **A-B** bridge is created.  But
+what if we then need a bridge between chains **B** and **C**? Fine, we
+create that **B-C** bridge, too. But now what happens if we then
+create a **C-A** bridge? Potentially, meessages can now run around in a
+circle, from **A** to **B** to **C** and back to **A** again,
+multiplying assets as they go. This is the danger of creating
+cylclic structures in bridging.
 
-What we are proposing is a bridging blockchain, which is to say a new
-L1 chain that provides strong redundancy for secure bridging and acts
-as the hub in a hub-and-spoke bridging network. This chain can be used
-for much more than bridging — in fact, we propose to use this chain as
-a hub for a wide range of cross-chain applications, notably financial
-derivatives — but such a chain could create tremendous value as the
-universal L2 and bridge between all public blockchains.
-
-#### Bridging Architecture: Hub-and-spoke vs n^2
-
-Right now, bridges are generally an ad-hoc affair. If a bridge is
-necessary between chain **A** and chain **B**, that specific bridge is
-created. Bridging every chain to every other chain quickly leads to an
-**n**^2 explosion in the number of bridges, a massive risk in and of
-itself. A much better network topology is hub-and-spoke, where if
-there are **n** asset chains there are precisely **n** bridges.
+Arbitrary bridging, even when cycles are not introduced, quickly leads
+to an **n**^2 explosion in the number of bridges, a nightmare for
+security and management. A much better topology would be a
+hub-and-spoke model, where assets on spoke blockchains must bridge
+onto and off of a hub blockchain.  Not only is this topology order
+**n** in the number of bridges, the hub can enforce acyclic bridging
+relationships. Furthermore, that hub blockchain could be used for many
+other cross-chain and multi-chain applications.
 
 **Insert hub-and-spoke vs n^2 diagram here**
 
+### A blockchain for bridging... and for other things, too 😉
+We believe that the proper structure for bridging is a hub-and-spoke
+topology, limiting the number of bridges and enforcing an acyclic
+topologoy. This implies that one blockchain act as the hub, and we
+propose creating a blockchain specifically for this role, though the
+hub chain will be ideally situated to provide a range of useful
+cross-chain and multichain applications beyond bridging.
+
+This bridginig blockchain will be structured so that each bridging
+node will include oracles/relayers for all bridged chains, and can be
+called upon to act as an independent verifier for bridging. Bridging
+nodes will be chosen in an unpredictable fashion to verify and
+finalize bridging operations, with three or more independent
+verifications required before finalization.  Since an attacker will
+not be able to predict which nodes will be involved in verfying or
+finalizing transactions, the security of this bridging system will
+scale with the size of the network.
+
 #### Bridge Chain Node Architecture
 
-We envision a new L1 (almost certainly based on the time-tested EVM/Geth stack, though a Jupiter/Cosmos implementation or some other bespoke implementation is conceivable as well) in which each node in the chain is actually a tightly integrated cluster of nodes: One "full" bridge-mining node and one or more lightweight or full nodes for each supported asset bridging chain. An example cluster is shown below:
+We envision a new L1 (almost certainly based on the time-tested
+EVM/Geth stack, though a Jupiter/Cosmos implementation or some other
+bespoke implementation is conceivable as well) in which each node in
+the chain is actually a tightly integrated cluster of nodes: One
+"full" bridge-mining node and one or more lightweight or full nodes
+for each supported asset bridging chain. An example cluster is shown
+below:
 
-**insert diagram of ZeroChain (bridge mining) node with Bitcoin, Ethereum, Solana, and Binance Smart Chain nodes**
+**insert diagram of ZeroChain (bridge mining) node with Bitcoin,
+Ethereum, Solana, and Binance Smart Chain nodes**
 
-This node cluster is deployed as a single container or tightly orchestrated set of containers with the **Bridge Control Script** (likely a Node.js or Python script) receiving events from each node and interacting with appropriate smart contracts on all nodes.
+This node cluster is deployed as a single container or tightly
+orchestrated set of containers with the **Bridge Control Script**
+(likely a Node.js or Python script) receiving events from each node
+and interacting with appropriate smart contracts on all nodes.
 
-The Bridge Control Script will receive an event each time a new block is issued on the bridge mining L1. At that point, the script will determine whether it is participating in validation, as described below.
+The Bridge Control Script will receive an event each time a new block
+is issued on the bridge mining L1. At that point, the script will
+determine whether it is participating in validation, as described
+below.
 
 #### Distributed, unpredictable bridge transaction validation
 
-Just as miners compete to add the next block to a conventional proof-of-work blockchain, in bridge mining each mining node would cooperate to validate bridging transactions. The algorithm is as follows:
+**NOTE: Edits in progress**
+
+Just as miners compete to add the next block to a conventional
+proof-of-work blockchain, in bridge mining each mining node would
+cooperate to validate bridging transactions. The algorithm is as
+follows:
 
 For each new block on the blockchain:
 
-* Each bridge mining node will "roll the dice" (see psuedocode below) to determine if it is self-nominating to participate in bridge validation. The result of the roll can be one of three states: no action, transaction verification, or transaction finalization.
-  * In the `no action` state, the node does not participate in validation for this block. For blockchiains with more than a small number of bridge mining nodes, this is the most likely outcome.
-  * In the `transaction verification` state, the node reviews all unexpired, unfinalized bridging requests older than the `confirmation threshold`, say five blocks. (requests younger than the threshold are considered to be provisional, and may be subject to a block reorganization). A `bridging request` is a smart-contract transaction requesting to bridge an asset on to, or off of, the bridging chain. Each bridging request can be identified by a unique transaction hash.
+* Each bridge mining node will "roll the dice" (see psuedocode below)
+  to determine if it is self-nominating to participate in bridge
+  validation. The result of the roll can be one of three states: no
+  action, transaction verification, or transaction finalization.
+* In the `no action` state, the node does not participate in
+  validation for this block. For blockchiains with more than a small
+  number of bridge mining nodes, this is the most likely outcome.
+* In the `transaction verification` state, the node reviews all
+  unexpired, unfinalized bridging requests older than the
+  `confirmation threshold`, say five blocks. (requests younger than
+  the threshold are considered to be provisional, and may be subject
+  to a block reorganization). A `bridging request` is a smart-contract
+  transaction requesting to bridge an asset on to, or off of, the
+  bridging chain. Each bridging request can be identified by a unique
+  transaction hash.
 
-    For each new or unfinalized bridging request older than the `confirmation threshold`\:
-    * If the request is older than the `expiration threshold`, say ten blocks, the request is expired and will be ignored. Assets that have been temporarily locked in escrow will be unlocked and available for withdrawal.
-    * If the request is not expired and appears to be properly constructed and authorized based on on-chain state, the node marks the request as provisionally confirmed and posts a `confirmation message` on the corresponding chain. Several such provisional confirmations and `confirmation message` may have already been posted, or will be posted by other nodes this block or in future blocks.
-    * If a request is not expired but does not appear to be properly constructed/authorized, no action is taken, though a log event may be generated
-  * In the `transaction finalization` state, the node reviews all unexpired, confirmed bridging transactions. For each confirmation that appears valid, it increments a counter associated with the underlying bridging request. If the counter exceeds a `verification threshold`, the node invokes the underlying smart-contract method for the bridging operation, citing the hashes of the valid confirmations.
-    * increment a confirmation counter for the confirmed transaction's bridging request
+  For each new or unfinalized bridging request older than the `confirmation threshold`\:
+  * If the request is older than the `expiration threshold`, say ten
+    blocks, the request is expired and will be ignored. Assets that
+    have been temporarily locked in escrow will be unlocked and
+    available for withdrawal.
+  * If the request is not expired and appears to be properly
+    constructed and authorized based on on-chain state, the node marks
+    the request as provisionally confirmed and posts a `confirmation
+    message` on the corresponding chain. Several such provisional
+    confirmations and `confirmation message` may have already been
+    posted, or will be posted by other nodes this block or in future
+    blocks.
+  * If a request is not expired but does not appear to be properly
+    constructed/authorized, no action is taken, though a log event may
+    be generated
+* In the `transaction finalization` state, the node reviews all
+  unexpired, confirmed bridging transactions. For each confirmation
+  that appears valid, it increments a counter associated with the
+  underlying bridging request. If the counter exceeds a `verification
+  threshold`, the node invokes the underlying smart-contract method
+  for the bridging operation, citing the hashes of the valid
+  confirmations.
+* increment a confirmation counter for the confirmed transaction's
+  bridging request
   * 
