@@ -1,6 +1,6 @@
 # ZeroProxy.io Whitepaper
 Born on Tue Aug  2 13:11:03 PDT 2022, created by 0x0proxy.eth  
-DRAFT Version ENG-020922
+DRAFT Version ZP-ENG-020922
 
 ## Project Overview
 [ZeroProxy.io](https://zeroproxy.io) is creating a better platform for
