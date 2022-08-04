@@ -28,8 +28,10 @@ license](https://opensource.org/licenses/MIT).
 
 ## Repository structure
  * [assets](./assets) &mdash; the place for images, logos, *etc.*
- * [docs](./docs) &mdash; home of the ZeroProxy.io whitepaper and the
-   place for high-level project docs
+ * [docs](./docs) &mdash; home of the 
+   [ZeroProxy Whitepaper](./docs/ZeroProxy.md) and the 
+   [Bridge Mining Whitepaper](./docs/BridgeMining.md), and generally 
+   the place for high-level project docs.
  * [zerochain](./zerochain) &mdash; ZeroChain test network scripts and tools
  * [solidity](./solidity) — EVM smart contracts and test/depoloyment scripts
 
