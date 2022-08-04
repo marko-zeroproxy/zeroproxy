@@ -8,5 +8,5 @@ links in this README when new documents are added.
 ## Contents
 * [ZeroProxy Whitepaper](./ZeroProxy.md) &mdash; Main ZeroProxy
   project whitepaper.
-* [Bridge Mining Whitepaper](./docs/BridgeMining.md) &mdash; Bridge
+* [Bridge Mining Whitepaper](./BridgeMining.md) &mdash; Bridge
   mining whitepaper.
