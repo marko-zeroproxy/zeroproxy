@@ -124,5 +124,8 @@ Talk about the web3 API
 #### ZeroProxy Web2 API
 Talk about the web2 API
 
+![0x0proxy web2 light](../assets/0x0proxyWeb2.svg#gh-light-mode-only)
+![0x0proxy web2 dark](../assets/0x0proxyWeb2Dark.svg#gh-dark-mode-only)
+
 ## Conclusions
 Wrap things up
