@@ -83,21 +83,98 @@ technology.  This solution is built from the following elements:
   properties to the blockchain consensus mechanism of a traditional L1,
   ZeroProxy provides strong asset security guarantees.
 * The 0x0proxy Contract Framework &mdash; The 0x0proxy Contract
-  Framework provides a toolset especially well suited to constructing
+  Framework provides a tool set especially well suited to constructing
   modular, composable, ephemeral states, such as financial
-  derivatives.  By using this framework we achive the properties of
+  derivatives.  By using this framework we achieve the properties of
   native collateralization, self-settlement, modularity/composability,
   and transparency.
-* The ZeroProxy web3 API &mdash; a set of Javascript tools and smart
+* The ZeroProxy web3 API &mdash; a set of JavaScript tools and smart
   contract APIs that allow ZeroProxy partners and other permissioned
   actors to access ZeroProxy asset management and trading functionality.
 * The ZeroProxy web2 API &mdash; The ZeroProxy web2 API provides
   ZeroProxy partners and other permissioned entities a standard web2
   RESTful interface to access ZeroProxy asset management and trading
-  functionality, incuding support for hosted wallets.
+  functionality, including support for hosted wallets.
   
 ## How does it work?
-Go through some examples here
+Before we get into the details of the architecture, let's walk through
+some simple use cases.
+
+For the sake of simplicity, we will illustrate interactions using the
+web2 bridge API.
+
+For these requests to be successful the user must first authenticate
+themselves to server and unlock any relevant wallets for either a
+specified number of transactions or for a defined period of time.
+
+Server authorization by means of username and password can be
+accomplished as follows:
+
+	https://ZeroProxy.io/api/v1/auth?zeroID=...&pass=...
+	
+The result is a session token
+(e.g. `session=deadabeefdeadbeefdeadbeef`) good for one hour (longer
+periods can be requested)
+
+To take any action other than querying the state of the ZeroChain
+wallets must be unlocked for transaction signing, resulting in a
+limited-use auth token, e.g.
+
+	https://ZeroProxy.io/api/v1/unlock?chain=Solana&wallet=0xa...&sk=0x1e..&n=1&maxtime=300&session=deadbeefdeadbeefdeadbeef
+	
+would unlock a Solana wallet specified by `wallet` using the secret
+key `sk` for one signing use `n=1` and a maximum of five minutes (300
+seconds), resulting in a special-purpose auth token good only for
+transactions relating to that signer,
+e.g. `auth=ff031337baadcaa7031337ff`
+
+If an `auth` token is issued with an `n` greater than one, that means
+that it can be used up to `n` times. Each use must specify a `nonce=`
+that increases by one each time. An invalid nonce, either a duplicate
+or use out of sequence, will result in a transaction failure and an
+invalidation of the `auth` token.
+
+### Bridging Assets
+One of the powerful features of ZeroProxy is its robust bridging
+system, which we call BridgeMining. BridgeMining allows any supported,
+standard asset class to be bridged from a supported "spoke" chain
+onto the "hub" ZeroChain, and vice versa.
+
+For example, say we wanted to bridge an NFT from Solana onto the
+ZeroChain. After authenticating to the web2 bridge at
+https://ZeroProxy.io/api/v1/auth and unlocking a Solana wallet, we
+bridge an NFT onto the ZeroChain as so:
+
+	https://ZeroProxy.io/api/v1/bridgeNFT?from=Solana&contract=0x0...12&tokenID=213&to=ZeroChain&wallet=0x232...a23&session=...&auth=....&nonce=1
+
+Assuming the `session` and `auth` tokens are valid, this would
+initiate the asset bridge process, temporarily locking the Solana NFT
+until the asset bridge is either confirmed, in which case the asset is
+locked till it comes back to the Solana chain, or is released if the
+bridge is not validated, which will occasionally happen if there is a
+block reorg on the Solana or ZeroChain.
+
+If successful, the bridged NFT would be issued to the specified
+wallet. A ZeroChain observer listening for events relating to the
+specified wallet would receive
+
+	EVENT:mint contract=.... tokenID=.... recipient= ...
+	
+### Fractionalizing NFTs
+Another common operation is fractionalizing an NFT on the ZeroChain
+for the purposes of writing options and then trading the options and
+fractional shares. Assuming proper authentication and signer unlock,
+this can be accomplished as follows:
+
+	https://ZeroProxy.io/api/v1/fracNFT?contract=...&tokenID=...&issue=100&dragAlong=75&strike=1ETH&wallet=...&session=...&auth=...&nonce=1
+
+Assuming success, the result would be the original NFT (as specified by
+`contract` and `tokenID`) being locked in the fractionalizing escrow
+contract and an ERC20 "NFT coin" being issued to the address specified
+by `wallet=` with a total supply of 100, drag-along rights exercisable
+by anyone owning 75% or more of the supply, and a strike price for the
+drag-along call of 1 ETH (technically, 1 0x0ETH, the bridged
+representation of Ethereum that is used on the ZeroChain).
   
 ## Architecture
 ![0x0proxy architecture](../assets/0x0proxyArch.svg#gh-light-mode-only)
