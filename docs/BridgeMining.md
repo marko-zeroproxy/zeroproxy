@@ -1,8 +1,25 @@
 # Bridge Mining for Blockchain Interconnect
-A whitepaper by 0x0proxy.eth. Created 29 July 2022  
-DRAFT Version BRDG-ENG-030922
+A Whitepaper by 0x0proxy.eth. Created 29 July 2022  
+DRAFT Version BRDG-ENG-150822
 
-## Problem to Solve
+## Overview
+
+Blockchain technology provides strong internal consistency guarantees
+for on-chain state.  However, mechanisms for bridging between
+blockchains and mechanisms for bringing off-chain information onto a
+blockchain (oracles) have historically been less reliable. Indeed, a
+preponderance of successful DeFi exploits over the last five years
+have exploited flaws in bridging or price oracles. [insert various
+references]
+
+In this paper we describe a unified mechanism to provide strong
+security guarantees for bridges and for oracles, utilizing a
+methodology we call "bridge mining."  Bridge mining creates a
+distributed, difficult-to-attack consensus mechanism similar to, but
+distinct from proof of work and proof-of-stake, though it is
+compatible with both underlying chain consensus mechanisms.
+
+## Problems to Solve
 
 Bridges between blockchains are essential to the operation of many
 important and useful blockchain protocols. However, the problem of
@@ -17,9 +34,29 @@ necessarily exist outside such guarantees, and present low-redundancy
 failure modes, in some cases requiring only the compromise of a single
 signer.
 
-In this paper we outline a solution for more secure bridging in which
-the challenge of attacking a bridge scales in difficulty with the
-challenge of attacking the integrity of an L1 chain.
+Similarly, oracles are essential to the operation of many DeFi
+protocols since price signals often originate off-chain, e.g. the
+exchange rate of BTC/USD, as reported by Coinbase. While the
+centralized nature of some price signals is not directly addressable,
+centralized points of failure relating to observing such signals is. 
+
+Protocols such as Chainlink offer solutions to some oracle problems,
+but price oracle attacks remain distressingly common.  For example, in
+May of 2022 the Fortress protocol 
+[lost all of its funds](https://cryptonews.com/news/defi-lending-protocol-fortress-loses-all-funds-oracle-price-manipulation-attack.htm)
+in a price manipulation attack.
+
+In this paper we outline a technical solution for better bridging and
+better price oracles, all within a single unified distributed
+consensus framework.  The security of this solution increases as the
+number of participating nodes increases, making it similar to the
+consistency guarantees offered by a conventional L1. And while we
+describe bridging and oracles as separate problems, at a deeper level
+they are very similar, and the solution for both hinges on the same
+core idea of entropy generation and stochastic node self-selection for
+verification and validation.
+
+## The Bridging Problem
 
 ### What is a bridge?
 
@@ -35,9 +72,9 @@ could in principle have the best of both worlds. How would this be
 possible?
 
 With a small amount of thought, an answer presents itself. Some
-quantity of BTC is transferred to a bitcoin wallet address that is
+quantity of BTC is transferred to a Bitcoin wallet address that is
 controlled by an escrow mechanism, locking this BTC. At the same time,
-a proxy asset such as "[wrapped bitcoin](https://wbtc.network/)" is
+a proxy asset such as "[wrapped Bitcoin](https://wbtc.network/)" is
 issued on the Ethereum network as an ERC20 token. Since the proxy
 asset corresponds 1:1 to the original asset, and can be converted back
 to the original through a burning/unlocking process, a strong argument
@@ -46,19 +83,19 @@ original.
 
 ### Why do bridges present security risks?
 
-Because a bridge represnts a link between two seperate chains, the
-bridge can never be more secure than the consensus mechaism of either
-chain. For that reason, bridges will always be vulerable to successful
+Because a bridge represents a link between two separate chains, the
+bridge can never be more secure than the consensus mechanism of either
+chain. For that reason, bridges will always be vulnerable to successful
 51% attacks on the underlying bridged chains, as [Vitalik Buterin
 points
 out](https://old.reddit.com/r/ethereum/comments/rwojtk/ama_we_are_the_efs_research_team_pt_7_07_january/hrngyk8/).
 
-Furthermore, Vitalik points out that bridges can creat systemic risk:
+Furthermore, Vitalik points out that bridges can create systemic risk:
 as bridges proliferate willy-nilly, the security of the bridged
 ecosystem because as weak as the weakest link. However, bridging is an
 essential feature of many protocols, and bridges are unlikely to
 disappear any time soon.  Thus, we believe the goal should be strong,
-secure bridging, with security guarantees that approach the robstness
+secure bridging, with security guarantees that approach the robustness
 of the underlying L1s.
 
 Unfortunately, bridges are often much less secure than the consensus
@@ -121,13 +158,13 @@ By placing this bridge and all relevant personnel at the center of an
 intensive, paranoid, defense-in-depth security system, we might have
 some security assurances, but at what cost, and for how long?
 
-### Upgradiging the Naive Implementation: Layer Zero
+### Upgrading the Naive Implementation: Layer Zero
 We are not the first ones to take the prospect of secure bridging
 seriously. For example, the [Layer Zero
 Protocol](https://layerzero.network/pdf/LayerZero_Whitepaper_Release.pdf) provides
-a communication mechaism between blockchains in which two separate off
+a communication mechanism between blockchains in which two separate off
 chain entities, a relayer and an oracle, must agree in order for a
-transactioon to proceed.
+transaction to proceed.
 
 ![Layer Zero Diagram](../assets/LayerZero.png)
 
@@ -141,7 +178,7 @@ otherwise subvert the security of both entities.
 ### Adding Human Oversight and Redundancy
 
 If a naive algorithmic bridge, or a dual-redundant bridge such as
-offered by Laer Zero, presents a high risk of exploit, the next
+offered by Layer Zero, presents a high risk of exploit, the next
 logical step might be to add human oversight and additional
 redundancy. In this approach we create an escrow mechanism and
 minting/burning contract that require multiple, independent human
@@ -183,7 +220,7 @@ properties of an L1, namely that a successful exploit would require
 the compromise of multiple, independent, and heterogeneous nodes, and
 in which the security of the bridging system grows proportionally with
 the number of nodes that are added. Our proposed solution also
-impooses a topological structure on the bridging system that minimizes
+imposes a topological structure on the bridging system that minimizes
 complexity and risk.
 
 ### Bridging Topology: Hub-and-spoke vs n^2
@@ -192,10 +229,10 @@ generally an ad-hoc affair. If a bridge is necessary between chain
 **A** and chain **B**, that specific **A-B** bridge is created.  But
 what if we then need a bridge between chains **B** and **C**? Fine, we
 create that **B-C** bridge, too. But now what happens if we then
-create a **C-A** bridge? Potentially, meessages can now run around in a
+create a **C-A** bridge? Potentially, messages can now run around in a
 circle, from **A** to **B** to **C** and back to **A** again,
 multiplying assets as they go. This is the danger of creating
-cylclic structures in bridging.
+cyclic structures in bridging.
 
 Arbitrary bridging, even when cycles are not introduced, quickly leads
 to an **n**^2 explosion in the number of bridges, a nightmare for
@@ -211,18 +248,18 @@ other cross-chain and multi-chain applications.
 ### A blockchain for bridging... and for other things, too 😉
 We believe that the proper structure for bridging is a hub-and-spoke
 topology, limiting the number of bridges and enforcing an acyclic
-topologoy. This implies that one blockchain act as the hub, and we
+topology. This implies that one blockchain act as the hub, and we
 propose creating a blockchain specifically for this role, though the
 hub chain will be ideally situated to provide a range of useful
-cross-chain and multichain applications beyond bridging.
+cross-chain and multi-chain applications beyond bridging.
 
-This bridginig blockchain will be structured so that each bridging
+This bridging blockchain will be structured so that each bridging
 node will include oracles/relayers for all bridged chains, and can be
 called upon to act as an independent verifier for bridging. Bridging
 nodes will be chosen in an unpredictable fashion to verify and
 finalize bridging operations, with three or more independent
 verifications required before finalization.  Since an attacker will
-not be able to predict which nodes will be involved in verfying or
+not be able to predict which nodes will be involved in verifying or
 finalizing transactions, the security of this bridging system will
 scale with the size of the network.
 
@@ -236,7 +273,7 @@ the chain is actually a tightly integrated cluster of nodes: One
 for each supported asset bridging chain. An example cluster is shown
 below:
 
-**insert diagram of ZeroChain (bridge mining) node with Bitcoin,
+**insert diagram of Zero Chain (bridge mining) node with Bitcoin,
 Ethereum, Solana, and Binance Smart Chain nodes**
 
 This node cluster is deployed as a single container or tightly
@@ -260,12 +297,12 @@ follows:
 
 For each new block on the blockchain:
 
-* Each bridge mining node will "roll the dice" (see psuedocode below)
+* Each bridge mining node will "roll the dice" (see pseudocode below)
   to determine if it is self-nominating to participate in bridge
   validation. The result of the roll can be one of three states: no
   action, transaction verification, or transaction finalization.
 * In the `no action` state, the node does not participate in
-  validation for this block. For blockchiains with more than a small
+  validation for this block. For blockchains with more than a small
   number of bridge mining nodes, this is the most likely outcome.
 * In the `transaction verification` state, the node reviews all
   unexpired, unfinalized bridging requests older than the
@@ -300,4 +337,14 @@ For each new block on the blockchain:
   confirmations.
 * increment a confirmation counter for the confirmed transaction's
   bridging request
-  * 
+
+## The Oracle Problem
+
+### Similarities to the Bridging Problem
+
+### Adapting self-nomination to Distributed Oracles
+
+## Combining Oracles and Bridging
+
+## Conclusions
+
